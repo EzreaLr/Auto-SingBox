@@ -25,7 +25,7 @@
 **快捷命令：sb**
 
 ```
-(curl -LfsS https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/main/singbox.sh -o /usr/local/bin/sb || wget -q https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/main/singbox.sh -O /usr/local/bin/sb) && chmod +x /usr/local/bin/sb && sb
+(curl -LfsS https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -o /usr/local/bin/sb || wget -q https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -O /usr/local/bin/sb) && chmod +x /usr/local/bin/sb && sb
 ```
 ## **使用方法**
 - **Clash客户端配置文件位于/usr/local/etc/sing-box/clash.yaml，脚本默认的配置文件仅保证基础使用，效果不理想的请自行搜索解决**
