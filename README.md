@@ -4,7 +4,7 @@
 ## 重要提示：通过Docker容器虚拟化出来的系统有个小bug，重启机器后，需要重新进入脚本，重启一遍singbox，才能正常使用。
 
 ## **✨ 功能特性**
-- **轻量高效：资源占用极低，适合小内存机器使用，哈哈。**
+- **轻量高效：资源占用极低，适合小内存机器使用。**
 - **自动识别IPV4，ipv6**
 - **既有直连节点协议，也有落地节点协议**
 - **Hysteria2可选择开启QUIC流量混淆（需要客户端支持）**
@@ -25,7 +25,7 @@
 **快捷命令：sb**
 
 ```
-(curl -LfsS https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -o /usr/local/bin/sb || wget -q https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -O /usr/local/bin/sb) && chmod +x /usr/local/bin/sb && sb
+(curl -LfsS https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/main/singbox.sh -o /usr/local/bin/sb || wget -q https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/main/singbox.sh -O /usr/local/bin/sb) && chmod +x /usr/local/bin/sb && sb
 ```
 ## **使用方法**
 - **Clash客户端配置文件位于/usr/local/etc/sing-box/clash.yaml，脚本默认的配置文件仅保证基础使用，效果不理想的请自行搜索解决**
