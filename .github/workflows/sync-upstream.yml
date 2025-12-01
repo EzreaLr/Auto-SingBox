@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Check for Upstream Changes
         run: |
@@ -18,15 +18,18 @@ jobs:
           git config --global user.name "GitHub Action"
           git remote add upstream https://github.com/0xdabiaoge/singbox-lite.git
           git fetch upstream
-          if git diff --name-only upstream/main -- singbox.sh; then
-            echo "Changes detected in singbox.sh"
+          
+          # Check if either README.md or singbox.sh has changes
+          if git diff --name-only upstream/main -- README.md singbox.sh | grep -E "(README.md|singbox.sh)"; then
+            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
           else
-            echo "No changes detected in singbox.sh."
-            exit 1
+            echo "CHANGES_DETECTED=false" >> $GITHUB_ENV
           fi
 
-      - name: Sync singbox.sh
+      - name: Sync Files
+        if: env.CHANGES_DETECTED == 'true'
         run: |
-          git checkout upstream/main -- singbox.sh
-          git commit -m "Sync singbox.sh from upstream" || echo "No changes to commit"
+          git checkout upstream/main -- README.md singbox.sh
+          git add README.md singbox.sh
+          git commit -m "Sync README.md and singbox.sh from upstream (0xdabiaoge/singbox-lite)" || echo "No changes to commit"
           git push origin main
