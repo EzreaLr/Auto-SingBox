@@ -1,35 +1,66 @@
-name: Sync Upstream
+name: Sync Upstream Repository
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight UTC
-  workflow_dispatch:  # Allows manual triggering
+    - cron: '0 16 * * *'  # 每天 UTC 16:00 (北京时间 00:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Check for Upstream Changes
+      - name: Configure Git
         run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          git remote add upstream https://github.com/0xdabiaoge/singbox-lite.git
-          git fetch upstream
-          
-          # Check if either README.md or singbox.sh has changes
-          if git diff --name-only upstream/main -- README.md singbox.sh | grep -E "(README.md|singbox.sh)"; then
-            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/0xdabiaoge/singbox-lite.git 2>/dev/null || true
+          git fetch upstream main --depth=1
+
+      - name: Check for updates
+        id: check
+        run: |
+          if git diff --quiet HEAD upstream/main -- singbox.sh README.md; then
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+            echo "✅ 无更新"
           else
-            echo "CHANGES_DETECTED=false" >> $GITHUB_ENV
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "🔄 发现更新"
           fi
 
-      - name: Sync Files
-        if: env.CHANGES_DETECTED == 'true'
+      - name: Sync files
+        if: steps.check.outputs.has_updates == 'true'
         run: |
-          git checkout upstream/main -- README.md singbox.sh
-          git add README.md singbox.sh
-          git commit -m "Sync README.md and singbox.sh from upstream (0xdabiaoge/singbox-lite)" || echo "No changes to commit"
-          git push origin main
+          # 同步 singbox.sh
+          git checkout upstream/main -- singbox.sh
+          chmod +x singbox.sh
+          
+          # 保存自定义部分
+          sed -n '/^### 使用以下命令运行脚本/,$p' README.md > custom.tmp 2>/dev/null || true
+          
+          # 同步 README.md
+          git checkout upstream/main -- README.md
+          
+          # 合并自定义部分
+          if [ -s custom.tmp ]; then
+            sed -i '/^### 使用以下命令运行脚本/,$d' README.md
+            cat custom.tmp >> README.md
+          fi
+          rm -f custom.tmp
+
+      - name: Commit and push
+        if: steps.check.outputs.has_updates == 'true'
+        run: |
+          git add singbox.sh README.md
+          git commit -m "🔄 同步上游更新 ($(date -u '+%Y-%m-%d'))" || exit 0
+          git push
