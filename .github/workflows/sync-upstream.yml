@@ -45,18 +45,10 @@ jobs:
           git checkout upstream/main -- singbox.sh
           chmod +x singbox.sh
           
-          # 保存自定义部分
-          sed -n '/^### 使用以下命令运行脚本/,$p' README.md > custom.tmp 2>/dev/null || true
+          # 同步 README.md 并替换安装命令
+          git show upstream/main:README.md | sed 's|curl -LfsS https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/refs/heads/main/singbox.sh.*|curl -LfsS https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -o /usr/local/bin/sb \|\| wget -q https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -O /usr/local/bin/sb) \&\& chmod +x /usr/local/bin/sb \&\& sb|' > README.md
           
-          # 同步 README.md
-          git checkout upstream/main -- README.md
-          
-          # 合并自定义部分
-          if [ -s custom.tmp ]; then
-            sed -i '/^### 使用以下命令运行脚本/,$d' README.md
-            cat custom.tmp >> README.md
-          fi
-          rm -f custom.tmp
+          echo "✅ 文件已同步并保留自定义命令"
 
       - name: Commit and push
         if: steps.check.outputs.has_updates == 'true'
