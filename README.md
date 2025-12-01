@@ -25,7 +25,7 @@
 **快捷命令：sb**
 
 ```
-(curl -LfsS https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -o /usr/local/bin/sb || wget -q https://raw.githubusercontent.com/Acone0/singbox-lite/refs/heads/main/singbox.sh -O /usr/local/bin/sb) && chmod +x /usr/local/bin/sb && sb
+(curl -LfsS https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/main/singbox.sh -o /usr/local/bin/sb || wget -q https://raw.githubusercontent.com/0xdabiaoge/singbox-lite/main/singbox.sh -O /usr/local/bin/sb) && chmod +x /usr/local/bin/sb && sb
 ```
 ## **使用方法**
 - **Clash客户端配置文件位于/usr/local/etc/sing-box/clash.yaml，脚本默认的配置文件仅保证基础使用，效果不理想的请自行搜索解决**
@@ -83,6 +83,17 @@
 **5、新增Trojan+WS+TLS节点协议的搭建，搭建方法和用法同Vless+WS+TLS**
 
 **6、新增节点名称自定义功能，也可以回车使用默认节点名称。新增脚本更新和SingBox核心更新的功能**
+
+**2025.11.30更新要点：**
+
+**1、生成中转脚本时会提示是否安装Python 3以提供临时下载服务，所生成的HTTP链接复制到线路机——10管理 [混合模式] 中转脚本中使用，即可通过临时的HTTP链接将中转脚本下载过来，不需要手动上传线路机脚本了**
+
+**2、下载完成后记得去落地机选择是否保留或删除Python 3，对于内存和存储空间有限的NAT机器，请务必删除。Python 3的卸载删除只针对首次安装，若机器原本就存在Python 3，会自动跳过卸载步骤。**
+
+**2025.12.01更新要点：**
+
+**1、VLESS (WebSocket+TLS)和Trojan (WebSocket+TLS)新增选择直连模式和优选域名&IP模式，直连模式与原来的搭建方式一致。优选域名&IP模式第一步可以自定义输入优选域名或者IP地址，端口需要填写在CF回源的端口，生成的节点链接和yaml配置文件，会自动改变为443端口，直接复制即可使用。**
+
 
 ## **免责声明**
 - **本项目仅供学习与技术交流，请在下载后 24 小时内删除，禁止用于商业或非法目的。**
